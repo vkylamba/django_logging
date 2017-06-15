@@ -2,19 +2,19 @@
 from setuptools import setup
 from setuptools import find_packages
 
-import logging
+import django_logging
 
 setup(
     name='django-logging',
-    version=logging.__version__,
+    version=django_logging.__version__,
 
     description='Django logging package',
     long_description='Django logging package',
     keywords='django, logging',
 
-    author=logging.__author__,
-    author_email=logging.__email__,
-    url=logging.__url__,
+    author=django_logging.__author__,
+    author_email=django_logging.__email__,
+    url=django_logging.__url__,
 
     packages=find_packages(exclude=['docs']),
     classifiers=[
@@ -27,12 +27,10 @@ setup(
         'License :: Non-Free',
         'Topic :: Software Development :: Libraries :: Python Modules'],
 
-    license=logging.__license__,
+    license=django_logging.__license__,
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'python-logstash==0.4.6'
     ],
-    tests_require=[
-    ]
 )

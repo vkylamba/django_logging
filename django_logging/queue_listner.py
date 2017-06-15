@@ -8,9 +8,5 @@ log_queue_size = getattr(settings, 'LOG_HANDLER_QUEUE_SIZE', 10000)
 log_queue = Queue(maxsize=log_queue_size)
 
 queue_listner = QueueListener(
-    log_queue,
-    # console_handler,
-    # mail_admins_handler,
-    # file_handler,
-    # socket_handler
+    log_queue
 )
