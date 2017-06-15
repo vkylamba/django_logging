@@ -5,8 +5,7 @@ from logging import StreamHandler
 
 from .filters import TimestampFilter, ExecpathFilter
 from .logstash_handler import SocketLogstashHandler
-from .apps import log_queue
-from .queue_listner import queue_listner
+from .queue_listner import log_queue, queue_listner
 
 
 def get_logger_settings(env_name, log_dir, log_file_name, application_log_level='DEBUG',

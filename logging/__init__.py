@@ -6,3 +6,5 @@ __author__ = 'GALE Partners'
 __email__ = 'vu@galepartners.com'
 
 __url__ = 'https://github.com/Gale43/django-logging'
+
+default_app_config = 'django_logging.logging.apps.DjangoLoggingConfig'
