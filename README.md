@@ -15,7 +15,7 @@ INSTALLED_APPS = [
 
 3. Add the following settings in your Settings.py
 ```
-LOG_ENV_NAME = env("LOG_ENV_NAME", default="mackenzie-dev")
+LOG_ENV_NAME = env("LOG_ENV_NAME", default="project-dev")
 LOG_DIR = env("LOG_DIR", default="/app/logs")
 LOG_FILE_NAME = env("LOG_FILE_NAME", default='django.log')
 APPLICATION_LOG_LEVEL = env("APPLICATION_LOG_LEVEL", default="DEBUG")
