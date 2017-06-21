@@ -18,8 +18,8 @@ class DjangoLoggingConfig(AppConfig):
                 log_dir=settings.LOG_DIR,
                 log_file_name=settings.LOG_FILE_NAME,
                 application_log_level=settings.APPLICATION_LOG_LEVEL,
-                logstash_listner_ip=getattr(settings, 'LOGSTASH_LISTNER_IP', None),
-                logstash_listner_port=getattr(settings, 'LOGSTASH_LISTNER_PORT', None),
+                logstash_listner_ip=getattr(settings, 'LOGSTASH_LISTENER_IP', None),
+                logstash_listner_port=getattr(settings, 'LOGSTASH_LISTENER_PORT', None),
                 logstash_tags=getattr(settings, 'LOGSTASH_TAGS', [])
             )
             logging.config.dictConfig(logging_dict)
