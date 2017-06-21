@@ -15,12 +15,19 @@ INSTALLED_APPS = [
 
 3. Add the following settings in your Settings.py
 ```
+# The current environment name.
 LOG_ENV_NAME = env("LOG_ENV_NAME", default="project-dev")
+# The directory containing the log file.
 LOG_DIR = env("LOG_DIR", default="/app/logs")
+# Name of the log file
 LOG_FILE_NAME = env("LOG_FILE_NAME", default='django.log')
+# Logging Level. Choose from INFO, DEBUG, WARNING, ERROR or CRITICAL
 APPLICATION_LOG_LEVEL = env("APPLICATION_LOG_LEVEL", default="DEBUG")
-LOGSTASH_LISTNER_IP = env("LOGSTASH_LISTNER_IP", default=None)
-LOGSTASH_LISTNER_PORT = env("LOGSTASH_LISTNER_PORT", default=None)
+# Logstash IP.
+LOGSTASH_LISTENER_IP = env("LOGSTASH_LISTNER_IP", default=None)
+# Logstash Port.
+LOGSTASH_LISTENER_PORT = env("LOGSTASH_LISTNER_PORT", default=None)
+# List of Logstash tags.
 LOGSTASH_TAGS = []
 ```
 
