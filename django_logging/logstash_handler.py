@@ -25,7 +25,10 @@ class SocketLogstashHandler(SocketHandler):
         message_dict['type'] = 'django_log'
         message = json.dumps(message_dict) + '\n'
         if self.sock is None:
-            self.sock = self.makeSocket()
+            try:
+                self.sock = self.makeSocket()
+            except Exception as e:
+                print(e)
         try:
             self.sock.send(message.encode())
         except Exception as e:
