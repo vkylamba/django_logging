@@ -1,5 +1,9 @@
 # Async Django Logger
 
+[![Requirements Status](https://requires.io/github/Gale43/django_logging/requirements.svg?branch=master)](https://requires.io/github/Gale43/django_logging/requirements/?branch=master)
+[![Travis-CI Status](https://travis-ci.org/Gale43/django_logging.svg?branch=master)](https://travis-ci.org/Gale43/django_logging.svg?branch=master)
+
+
 ## Install Django Logging.
 1. `pip install git+https://github.com/Gale43/django_logging.git`
 
@@ -8,7 +12,7 @@
 ```
 INSTALLED_APPS = [
     ...
-    django_logging
+    'django_logging',
 ]
 ```
 

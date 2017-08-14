@@ -24,13 +24,14 @@ setup(
         'Programming Language :: Python :: 3',
         'Intended Audience :: Developers',
         'Operating System :: OS Independent',
-        'License :: Non-Free',
+        'License :: OSI Approved :: MIT License',
         'Topic :: Software Development :: Libraries :: Python Modules'],
 
     license=django_logging.__license__,
     include_package_data=True,
     zip_safe=False,
     install_requires=[
+        'Django>=1.8',
         'python-logstash==0.4.6'
     ],
 )
