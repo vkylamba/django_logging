@@ -16,6 +16,8 @@ addons:
       secure: $SONAR_TOKEN
     github_token:
       secure: $GITHUB_TOKEN
+    branches:
+      - master
 
 script:
   - coverage run `which django-admin.py` test
