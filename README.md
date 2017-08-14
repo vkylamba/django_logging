@@ -3,6 +3,7 @@
 [![Requirements Status](https://requires.io/github/Gale43/django_logging/requirements.svg?branch=master)](https://requires.io/github/Gale43/django_logging/requirements/?branch=master)
 [![Travis-CI Status](https://travis-ci.org/Gale43/django_logging.svg?branch=master)](https://travis-ci.org/Gale43/django_logging)
 [![Coverage Status](https://coveralls.io/repos/github/Gale43/django_logging/badge.svg?branch=master)](https://coveralls.io/github/Gale43/django_logging?branch=master)
+[![Sonarcloud Status](https://sonarcloud.io/api/badges/gate?key=gale43.django_logging)](https://sonarcloud.io/dashboard?id=gale43.django_logging)
 
 
 ## Install Django Logging.
