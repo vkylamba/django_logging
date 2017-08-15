@@ -14,12 +14,12 @@ addons:
     organization: "gale-partners"
     token:
       secure: $SONAR_TOKEN
-    github_token:
-      secure: $GITHUB_TOKEN
+    brances:
+      - master
 
 script:
   - coverage run `which django-admin.py` test
-  - sonar-scanner
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then sonar-scanner; fi
 
 notifications:
   email: false
