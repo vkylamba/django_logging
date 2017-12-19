@@ -129,14 +129,6 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'formatter': 'verbose',
                 'queue': log_queue
             },
-            'watchtower': {
-                'level': 'DEBUG',
-                'class': 'watchtower.CloudWatchLogHandler',
-                'boto3_session': boto3_session,
-                'log_group': CLOUDWATCH_LOG_GROUP,
-                'stream_name': CLOUD_WATCH_LOG_STREAM,
-                'formatter': 'verbose',
-            },
         },
         'loggers': {
             'django.request': {
@@ -150,12 +142,23 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler', 'watchtower'],
+                'handlers': ['queue_handler'],
                 'level': application_log_level,
                 'propagate': True
             },
         },
     }
+
+    if CLOUDWATCH_LOGGING_ENBLED:
+        logging_dict['handlers']['watchtower'] = {
+            'level': 'DEBUG',
+            'class': 'watchtower.CloudWatchLogHandler',
+            'boto3_session': boto3_session,
+            'log_group': CLOUDWATCH_LOG_GROUP,
+            'stream_name': CLOUD_WATCH_LOG_STREAM,
+            'formatter': 'verbose',
+        }
+        logging_dict['loggers']['application']['handlers'].append('watchtower')
 
     queue_listner.handlers = [
         console_handler,
