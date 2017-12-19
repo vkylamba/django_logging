@@ -1,11 +1,26 @@
 import logging
+from django.conf import settings
 from django.utils.log import AdminEmailHandler, RequireDebugTrue, RequireDebugFalse
 from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
+from boto3.session import Session
+
 from .filters import TimestampFilter, ExecpathFilter
 from .logstash_handler import SocketLogstashHandler
 from .queue_listner import log_queue, queue_listner
+
+
+CLOUDWATCH_LOGGING_ENBLED = getattr(settings, 'CLOUDWATCH_LOGGING_ENBLED', False)
+
+if CLOUDWATCH_LOGGING_ENBLED:
+    AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
+    AWS_REGION_NAME = getattr(settings, 'AWS_REGION_NAME', 'AWS_REGION_NAME')
+
+boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                        region_name=AWS_REGION_NAME)
 
 
 def get_logger_settings(env_name, log_dir, log_file_name, application_log_level='DEBUG',
@@ -112,7 +127,15 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'filters': ['timestamp'],
                 'formatter': 'verbose',
                 'queue': log_queue
-            }
+            },
+            'watchtower': {
+                'level': 'DEBUG',
+                'class': 'watchtower.CloudWatchLogHandler',
+                'boto3_session': boto3_session,
+                'log_group': 'Alchemy-dev-group',
+                'stream_name': 'Alchemy-dev-stream',
+                'formatter': 'verbose',
+            },
         },
         'loggers': {
             'django.request': {
@@ -126,7 +149,7 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler'],
+                'handlers': ['queue_handler', 'watchtower'],
                 'level': application_log_level,
                 'propagate': True
             },

@@ -32,6 +32,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'Django>=1.8',
-        'python-logstash==0.4.6'
+        'python-logstash==0.4.6',
+        'watchtower==0.5.2',
     ],
 )
