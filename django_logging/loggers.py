@@ -12,11 +12,12 @@ from .queue_listner import log_queue, queue_listner
 
 
 CLOUDWATCH_LOGGING_ENBLED = getattr(settings, 'CLOUDWATCH_LOGGING_ENBLED', False)
+AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
+AWS_REGION_NAME = getattr(settings, 'AWS_REGION_NAME', 'AWS_REGION_NAME')
+CLOUDWATCH_LOG_GROUP = getattr(settings, 'CLOUDWATCH_LOG_GROUP', 'CLOUDWATCH_LOG_GROUP')
+CLOUD_WATCH_LOG_STREAM = getattr(settings, 'CLOUD_WATCH_LOG_STREAM', 'CLOUD_WATCH_LOG_STREAM')
 
-if CLOUDWATCH_LOGGING_ENBLED:
-    AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
-    AWS_REGION_NAME = getattr(settings, 'AWS_REGION_NAME', 'AWS_REGION_NAME')
 
 boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID,
                         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -132,8 +133,8 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'level': 'DEBUG',
                 'class': 'watchtower.CloudWatchLogHandler',
                 'boto3_session': boto3_session,
-                'log_group': 'Alchemy-dev-group',
-                'stream_name': 'Alchemy-dev-stream',
+                'log_group': CLOUDWATCH_LOG_GROUP,
+                'stream_name': CLOUD_WATCH_LOG_STREAM,
                 'formatter': 'verbose',
             },
         },
