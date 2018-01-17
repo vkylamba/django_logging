@@ -3,6 +3,8 @@ from django.utils.log import AdminEmailHandler, RequireDebugTrue, RequireDebugFa
 from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
+from boto3.session import Session
+
 from .filters import TimestampFilter, ExecpathFilter
 from .logstash_handler import SocketLogstashHandler
 from .queue_listner import log_queue, queue_listner
@@ -11,8 +13,18 @@ from .queue_listner import log_queue, queue_listner
 def get_logger_settings(env_name, log_dir, log_file_name, application_log_level='DEBUG',
                         logstash_listner_ip=None,
                         logstash_listner_port=None,
-                        logstash_tags=[]
+                        logstash_tags=[],
+                        cloudwatch_logging_enabled=False,
+                        aws_access_key_id=None,
+                        aws_secret_access_key=None,
+                        aws_region_name=None,
+                        cloudwatch_log_group=None,
+                        cloud_watch_log_stream=None,
                         ):
+
+    boto3_session = Session(aws_access_key_id=aws_access_key_id,
+                            aws_secret_access_key=aws_secret_access_key,
+                            region_name=aws_region_name)
 
     # Formatters
     verbose_formatter = logging.Formatter(
@@ -112,7 +124,7 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'filters': ['timestamp'],
                 'formatter': 'verbose',
                 'queue': log_queue
-            }
+            },
         },
         'loggers': {
             'django.request': {
@@ -126,12 +138,23 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler'],
+                'handlers': ['queue_handler', 'file_error'],
                 'level': application_log_level,
                 'propagate': True
             },
         },
     }
+
+    if cloudwatch_logging_enabled:
+        logging_dict['handlers']['watchtower'] = {
+            'level': 'DEBUG',
+            'class': 'watchtower.CloudWatchLogHandler',
+            'boto3_session': boto3_session,
+            'log_group': cloudwatch_log_group,
+            'stream_name': cloud_watch_log_stream,
+            'formatter': 'verbose',
+        }
+        logging_dict['loggers']['application']['handlers'].append('watchtower')
 
     queue_listner.handlers = [
         console_handler,

@@ -1,8 +1,10 @@
 from queue import Queue
 from logging.handlers import QueueListener
-from django.conf import settings
+import environ
 
-log_queue_size = getattr(settings, 'LOG_HANDLER_QUEUE_SIZE', 10000)
+env = environ.Env()
+environ.Env.read_env()
+log_queue_size = env('LOG_HANDLER_QUEUE_SIZE', default=10000)
 
 # Log queue used by queue handler
 log_queue = Queue(maxsize=log_queue_size)
