@@ -20,7 +20,13 @@ class DjangoLoggingConfig(AppConfig):
                 application_log_level=settings.APPLICATION_LOG_LEVEL,
                 logstash_listner_ip=getattr(settings, 'LOGSTASH_LISTENER_IP', None),
                 logstash_listner_port=getattr(settings, 'LOGSTASH_LISTENER_PORT', None),
-                logstash_tags=getattr(settings, 'LOGSTASH_TAGS', [])
+                logstash_tags=getattr(settings, 'LOGSTASH_TAGS', []),
+                cloudwatch_logging_enabled=getattr(settings, "CLOUDWATCH_LOGGING_ENABLED", False),
+                aws_access_key_id=getattr(settings, "AWS_ACCESS_KEY_ID", None),
+                aws_secret_access_key=getattr(settings, "AWS_SECRET_ACCESS_KEY", None),
+                aws_region_name=getattr(settings, "AWS_REGION_NAME", None),
+                cloudwatch_log_group=getattr(settings, "CLOUDWATCH_LOG_GROUP", None),
+                cloud_watch_log_stream=getattr(settings, "CLOUD_WATCH_LOG_STREAM", None),
             )
             logging.config.dictConfig(logging_dict)
         queue_listner.start()

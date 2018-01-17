@@ -1,5 +1,4 @@
 import logging
-from django.conf import settings
 from django.utils.log import AdminEmailHandler, RequireDebugTrue, RequireDebugFalse
 from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
@@ -11,24 +10,21 @@ from .logstash_handler import SocketLogstashHandler
 from .queue_listner import log_queue, queue_listner
 
 
-CLOUDWATCH_LOGGING_ENBLED = getattr(settings, 'CLOUDWATCH_LOGGING_ENBLED', False)
-AWS_ACCESS_KEY_ID = getattr(settings, 'AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'AWS_SECRET_ACCESS_KEY')
-AWS_REGION_NAME = getattr(settings, 'AWS_REGION_NAME', 'AWS_REGION_NAME')
-CLOUDWATCH_LOG_GROUP = getattr(settings, 'CLOUDWATCH_LOG_GROUP', 'CLOUDWATCH_LOG_GROUP')
-CLOUD_WATCH_LOG_STREAM = getattr(settings, 'CLOUD_WATCH_LOG_STREAM', 'CLOUD_WATCH_LOG_STREAM')
-
-
-boto3_session = Session(aws_access_key_id=AWS_ACCESS_KEY_ID,
-                        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                        region_name=AWS_REGION_NAME)
-
-
 def get_logger_settings(env_name, log_dir, log_file_name, application_log_level='DEBUG',
                         logstash_listner_ip=None,
                         logstash_listner_port=None,
-                        logstash_tags=[]
+                        logstash_tags=[],
+                        cloudwatch_logging_enabled=False,
+                        aws_access_key_id=None,
+                        aws_secret_access_key=None,
+                        aws_region_name=None,
+                        cloudwatch_log_group=None,
+                        cloud_watch_log_stream=None,
                         ):
+
+    boto3_session = Session(aws_access_key_id=aws_access_key_id,
+                            aws_secret_access_key=aws_secret_access_key,
+                            region_name=aws_region_name)
 
     # Formatters
     verbose_formatter = logging.Formatter(
@@ -142,20 +138,20 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler'],
+                'handlers': ['queue_handler', 'file_error'],
                 'level': application_log_level,
                 'propagate': True
             },
         },
     }
 
-    if CLOUDWATCH_LOGGING_ENBLED:
+    if cloudwatch_logging_enabled:
         logging_dict['handlers']['watchtower'] = {
             'level': 'DEBUG',
             'class': 'watchtower.CloudWatchLogHandler',
             'boto3_session': boto3_session,
-            'log_group': CLOUDWATCH_LOG_GROUP,
-            'stream_name': CLOUD_WATCH_LOG_STREAM,
+            'log_group': cloudwatch_log_group,
+            'stream_name': cloud_watch_log_stream,
             'formatter': 'verbose',
         }
         logging_dict['loggers']['application']['handlers'].append('watchtower')
