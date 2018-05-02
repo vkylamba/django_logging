@@ -20,8 +20,8 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                         aws_region_name=None,
                         cloudwatch_log_group=None,
                         cloud_watch_log_stream=None,
+                        sentry_logging_enabled=False,
                         ):
-
     boto3_session = Session(aws_access_key_id=aws_access_key_id,
                             aws_secret_access_key=aws_secret_access_key,
                             region_name=aws_region_name)
@@ -138,12 +138,19 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler', 'file_error'],
+                'handlers': ['queue_handler'],
                 'level': application_log_level,
                 'propagate': True
             },
         },
     }
+    if sentry_logging_enabled:
+        logging_dict['handlers']['sentry'] = {
+            'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'tags': {},
+        }
+        logging_dict['loggers']['application']['handlers'].append('sentry')
 
     if cloudwatch_logging_enabled:
         logging_dict['handlers']['watchtower'] = {
