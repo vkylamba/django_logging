@@ -27,6 +27,7 @@ class DjangoLoggingConfig(AppConfig):
                 aws_region_name=getattr(settings, "AWS_REGION_NAME", None),
                 cloudwatch_log_group=getattr(settings, "CLOUDWATCH_LOG_GROUP", None),
                 cloud_watch_log_stream=getattr(settings, "CLOUD_WATCH_LOG_STREAM", None),
+                sentry_logging_enabled=getattr(settings, "SENTRY_ENABLED", False),
             )
             logging.config.dictConfig(logging_dict)
         queue_listner.start()
