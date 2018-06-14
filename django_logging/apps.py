@@ -28,6 +28,7 @@ class DjangoLoggingConfig(AppConfig):
                 cloudwatch_log_group=getattr(settings, "CLOUDWATCH_LOG_GROUP", None),
                 cloud_watch_log_stream=getattr(settings, "CLOUD_WATCH_LOG_STREAM", None),
                 sentry_logging_enabled=getattr(settings, "SENTRY_ENABLED", False),
+                console_debug_filter_enabled=getattr(settings, "CONSOLE_DEBUG_FILTER_ENABLED", True),
             )
             logging.config.dictConfig(logging_dict)
         queue_listner.start()
