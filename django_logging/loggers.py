@@ -21,6 +21,7 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                         cloudwatch_log_group=None,
                         cloud_watch_log_stream=None,
                         sentry_logging_enabled=False,
+                        console_debug_filter_enabled=True
                         ):
     boto3_session = Session(aws_access_key_id=aws_access_key_id,
                             aws_secret_access_key=aws_secret_access_key,
@@ -33,7 +34,8 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
     )
 
     console_handler = StreamHandler()
-    console_handler.addFilter(RequireDebugTrue())
+    if console_debug_filter_enabled:
+        console_handler.addFilter(RequireDebugTrue())
     console_handler.addFilter(TimestampFilter())
     console_handler.setFormatter(verbose_formatter)
 
