@@ -21,7 +21,8 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                         cloudwatch_log_group=None,
                         cloud_watch_log_stream=None,
                         sentry_logging_enabled=False,
-                        console_debug_filter_enabled=True
+                        console_debug_filter_enabled=True,
+                        require_mail_admin_handler=True
                         ):
     boto3_session = Session(aws_access_key_id=aws_access_key_id,
                             aws_secret_access_key=aws_secret_access_key,
@@ -38,13 +39,6 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
         console_handler.addFilter(RequireDebugTrue())
     console_handler.addFilter(TimestampFilter())
     console_handler.setFormatter(verbose_formatter)
-
-    mail_admins_handler = AdminEmailHandler()
-    mail_admins_handler.include_html = True
-    mail_admins_handler.setLevel(logging.ERROR)
-    mail_admins_handler.addFilter(RequireDebugFalse())
-    mail_admins_handler.addFilter(TimestampFilter())
-    mail_admins_handler.setFormatter(verbose_formatter)
 
     file_handler = RotatingFileHandler(
         filename=log_dir + '/' + log_file_name,
@@ -148,7 +142,7 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
     }
     if sentry_logging_enabled:
         logging_dict['handlers']['sentry'] = {
-            'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
+            'level': 'ERROR',  # To capture more than ERROR, change to WARNING, INFO, etc.
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
             'tags': {},
         }
@@ -167,9 +161,21 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
 
     queue_listner.handlers = [
         console_handler,
-        mail_admins_handler,
         file_handler
     ]
+
+    if require_mail_admin_handler:
+        # According to https://docs.djangoproject.com/en/2.0/topics/logging/
+        # This handler sends an email to the site ADMINS for each log message it receives.
+        mail_admins_handler = AdminEmailHandler()
+        mail_admins_handler.include_html = True
+        mail_admins_handler.setLevel(logging.ERROR)
+        mail_admins_handler.addFilter(RequireDebugFalse())
+        mail_admins_handler.addFilter(TimestampFilter())
+        mail_admins_handler.setFormatter(verbose_formatter)
+
+        queue_listner.handlers.append(mail_admins_handler)
+
     if socket_handler:
         queue_listner.handlers.append(socket_handler)
 

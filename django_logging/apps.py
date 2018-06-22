@@ -29,6 +29,7 @@ class DjangoLoggingConfig(AppConfig):
                 cloud_watch_log_stream=getattr(settings, "CLOUD_WATCH_LOG_STREAM", None),
                 sentry_logging_enabled=getattr(settings, "SENTRY_ENABLED", False),
                 console_debug_filter_enabled=getattr(settings, "CONSOLE_DEBUG_FILTER_ENABLED", True),
+                require_mail_admin_handler=getattr(settings, "REQUIRE_MAIL_ADMIN_HANDLER", True),
             )
             logging.config.dictConfig(logging_dict)
         queue_listner.start()
