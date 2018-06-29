@@ -134,7 +134,9 @@ def get_logger_settings(env_name, log_dir, log_file_name, application_log_level=
                 'propagate': True
             },
             'application': {
-                'handlers': ['queue_handler'],
+                # 'handlers': ['queue_handler'],
+                # Temporary
+                'handlers': ['file_error', 'console'],
                 'level': application_log_level,
                 'propagate': True
             },
